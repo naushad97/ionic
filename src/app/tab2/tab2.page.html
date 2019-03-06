@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Tab Two
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-item>
+    <button ion-button (click)="uploadFile()">Select File</button>
+  </ion-item>
+  <ion-item>
+    Filename: {{fileName}}
+  </ion-item>
+  <ion-item>
+    Status: {{uploadStatus}}
+  </ion-item>
+  <ion-item>
+    Response: 
+    <div class="item">{{uploadMessage}}</div>
+  </ion-item>
+</ion-content>
