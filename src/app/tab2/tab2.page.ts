@@ -5,6 +5,8 @@ import { File } from '@ionic-native/file';
 //Extra Libraries, Need to install
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
+import { Chooser } from '@ionic-native/chooser/ngx';
+
 
 @Component({
   selector: 'app-tab2',
@@ -15,6 +17,9 @@ export class Tab2Page {
   uri:any;
   fileName:any;
   uploadStatus:any;
+  uploadFileName:any;
+  uploadFilePath:any;
+  filePathToBeUploaded:any;
   uploadMessage:any;
   loading:any;
 
@@ -23,37 +28,44 @@ export class Tab2Page {
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
     private fileChooser: FileChooser,
-    private filePath: FilePath) {}
+    private filePath: FilePath,
+    private chooser: Chooser) {}
 
+    async chooseFile(){
+      this.fileChooser.open()
+      .then(uri => {
+        this.uri=uri;
+        return uri;
+      })
+      //Get filename using filepath library
+      .then(uri=>this.filePath.resolveNativePath(uri))
+      .then(filePath => {
+        let filename:any = filePath.split('/');
+        this.fileName = filename[filename.length - 1];
+        //return(filename)
+      });
+    }
   async uploadFile() {
-    //Choose the file using filechoose library
-    this.fileChooser.open()
-    .then(uri => {
-      this.uri=uri;
-      return uri;
-    })
-    //Get filename using filepath library
-    .then(uri=>this.filePath.resolveNativePath(uri))
-    .then(filePath => {
-      let filename:any = filePath.split('/');
-      filename = filename[filename.length - 1];
-      return(filename)
-    })
+    
     //Start Transfering using file transfer plugin
-    .then(filename=>{
-      this.fileName=filename;
-      this.loading = this.createLoading();
+    //.then(filename=>{
+      //this.fileName=this.filename;
+      //this.loading = this.createLoading();
       //this.dismissLoading(this.loading);
       //this.presentLoading(loading);
      /*  let loader = this.loadingCtrl.create({
         message: "Uploading..."
       });
       loader.present(); */
+      this.uploadFileName=this.fileName;
+      this.uploadFilePath = this.uri;
+     // this.filePathToBeUploaded=
+      console.log("Uploading file::"+this.fileName);
       
       const fileTransfer: FileTransferObject = this.transfer.create();
       let options: FileUploadOptions = {
         fileKey: 'file',
-        fileName: filename,
+        fileName: this.fileName,
         chunkedMode: false,
         headers: {}
       }
@@ -65,22 +77,19 @@ export class Tab2Page {
           alert(JSON.stringify(data.response));
           //loader.dismiss();
           //this.dismissLoading(this.loading);
-          this.presentToast("Image uploaded successfully");
+          //this.presentToast("Image uploaded successfully");
       }, (err) => {
         console.log(err);
-        
-        //loader.dismiss();
-        //this.dismissLoading(this.loading);
-        this.presentToast(err);
       });
-    })
-    .catch(err => {
-      //this.dismissLoading(this.loading);
-      alert(err)
-    });
+    //}
   }
+  //   .catch(err => {
+  //     //this.dismissLoading(this.loading);
+  //     alert(err)
+  //   });
+  // }
 
-  presentToast(msg) {
+  asyncpresentToast(msg) {
     let toast = this.toastCtrl.create({
       message: msg,
       duration: 6000,

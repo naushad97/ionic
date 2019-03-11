@@ -8,16 +8,26 @@
 
 <ion-content padding>
   <ion-item>
-    <button ion-button (click)="uploadFile()">Select File</button>
+    <button ion-button (click)="chooseFile()">Choose File</button>
   </ion-item>
   <ion-item>
     Filename: {{fileName}}
   </ion-item>
   <ion-item>
-    Status: {{uploadStatus}}
+    <button ion-button (click)="uploadFile()">Upload File</button>
   </ion-item>
   <ion-item>
-    Response: 
-    <div class="item">{{uploadMessage}}</div>
+    <div>Upload File Name: {{uploadFileName}}</div>
+  </ion-item>
+  <ion-item>
+      <div> Upload File Path: {{uri}}</div>
+    </ion-item>
+  <ion-item>
+    <div> Status: {{uploadStatus}}</div>
+  </ion-item>
+  <ion-item>
+    <ion-item>
+      Response: <div class="item">{{uploadMessage}}</div>
+    </ion-item>
   </ion-item>
 </ion-content>
